@@ -72,12 +72,26 @@ namespace testthemx_winform
                 if (records.Length > 0)
                 {
                     btnCheck.BackColor = okColor;
-                    txtErrMessage.Text = "OK - ex : " + records[0].DomainName;
+                    txtErrMessage.Text = "OK";
+
+                    string[] mxList = new string[records.Length];
+
+                    for (int i = 0; i < records.Length; ++i)
+                        mxList[i] = records[i].DomainName;
+
+                    cbx_list.DataSource = mxList;
+                    cbx_list.Visible = true;
+                    btn_clipboardCopy.Visible = true;
+                    btn_clipboardCopyAll.Visible = true;
                 }
                 else
                 {
                     btnCheck.BackColor = nokColor;
                     txtErrMessage.Text = "NOK";
+
+                    cbx_list.Visible = false;
+                    btn_clipboardCopy.Visible = false;
+                    btn_clipboardCopyAll.Visible = false;
                 }
             }
             catch (Exception exp)
@@ -100,6 +114,37 @@ namespace testthemx_winform
         {
             if (e.KeyCode == Keys.Enter)
                 Check();
+        }
+
+        /// <summary>
+        /// Copy selected server address to clipboard.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void btn_clipboardCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(cbx_list.Text);
+        }
+
+        /// <summary>
+        /// Copy all servers to clipboard.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void btn_clipboardCopyAll_Click(object sender, EventArgs e)
+        {
+            string str = string.Empty;
+
+            string[] data = (string[])cbx_list.DataSource;
+
+            for (int i = 0; i < data.Length; ++i)
+            {
+                str += data[i] + System.Environment.NewLine;
+            }
+
+            Clipboard.SetText(str);
         }
     }
 }
